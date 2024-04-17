@@ -27,6 +27,7 @@ app.use(
 );
 
 // enable sessions
+// req.session is only available after you enable sessions
 app.use(session({
     store: new FileStore(), // store session data in files
     secret: 'keyboard cat',
@@ -46,17 +47,25 @@ app.use(function(req,res, next){
     // extract out error flash messages
     res.locals.error_messages = req.flash('error_messages');
     next();
+});
+
+// share the current logged in user with all hbs file
+app.use(function(req,res,next){
+    res.locals.user = req.session.user;
+    next();
 })
 
 async function main() {
     // routes will be inside here
     const landingRoutes = require('./routes/landing');
-    const productRoutes = require('./routes/products')
+    const productRoutes = require('./routes/products');
+    const userRoutes = require('./routes/users');
 
 
     // use the landing routes
     app.use('/', landingRoutes);
-    app.use('/products', productRoutes)
+    app.use('/products', productRoutes);
+    app.use('/users', userRoutes);
 
   
 }

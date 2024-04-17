@@ -179,7 +179,7 @@ router.get('/delete-product/:productId', async function(req,res){
     });
 
     res.render('products/delete', {
-        product: product.toJSON()
+        product: product.toJSON(),
     })
 
 })
