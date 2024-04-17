@@ -2,20 +2,26 @@ const express = require('express');
 const router = express.Router();
 
 // require in the model
-const { Product } = require('../models');
+const { Product, Category } = require('../models');
 const { createProductForm, bootstrapField } = require('../forms');
 
 router.get('/', async function(req,res){
     // use the Product model to get all the products
-    const products = await Product.collection().fetch();
+    const products = await Product.collection().fetch({
+        withRelated:['category']
+    });
     // products.toJSON() convert the table rows into JSON data format
     res.render('products/index', {
         products: products.toJSON()
     } );
 });
 
-router.get('/add-product', function(req,res){
-    const productForm = createProductForm();
+router.get('/add-product', async function(req,res){
+
+    // get all the categories
+    const allCategories = await Category.fetchAll().map( category => [ category.get('id'), category.get('name')]);
+
+    const productForm = createProductForm(allCategories);
     res.render('products/create', {
         form: productForm.toHTML(bootstrapField)
     })
@@ -38,6 +44,7 @@ router.post('/add-product', function(req,res){
             product.set('name', form.data.name)
             product.set('cost', form.data.cost);
             product.set('description', form.data.description);
+            product.set('category_id', form.data.category_id)
             // save the product to the database
             await product.save();
 
@@ -63,7 +70,7 @@ router.post('/add-product', function(req,res){
 
 router.get('/update-product/:productId', async function(req,res){
     const productId = req.params.productId;
-    
+
     // fetch the product that we want to update
     // emulate: SELECT * from products WHERE id = ${productId}
     const product = await Product.where({
@@ -72,13 +79,18 @@ router.get('/update-product/:productId', async function(req,res){
         require: true
     });
 
+    // get all the categories
+      // get all the categories
+      const allCategories = await Category.fetchAll().map( category => [ category.get('id'), category.get('name')]);
+
     // create the product form
-    const productForm = createProductForm();
+    const productForm = createProductForm(allCategories);
 
     // prefill the form with values from the product 
     productForm.fields.name.value = product.get('name');
     productForm.fields.cost.value = product.get('cost');
     productForm.fields.description.value = product.get('description');
+    productForm.fields.category_id.value = product.get('category_id');
 
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),

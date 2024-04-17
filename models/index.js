@@ -15,7 +15,24 @@ const bookshelf = require('../bookshelf');
 // first argument: name of your model
 // second argument: a configuration object
 const Product = bookshelf.model('Product', {
-    tableName:'products'
-} )
+    tableName:'products',
+    // relationships in Bookmodel model are represented by functions
+    // the name of the FK column should be the table name with _id at the back, singular.
+    // the name of the FK should be the Model name of the other party but in small case, and singular
+    category:function() {
+        return this.belongsTo('Category'); // one Product model instance belongs to one Category
+    }
+} );
 
-module.exports = { Product }
+// and model name keep to singular form of the table name
+// but the first alphabet case is upper case
+const Category = bookshelf.model('Category', {
+    // table name should always be plural
+    tableName: 'categories',
+    // the name of the relationship is plural form of the model name
+    products:function() {
+        return this.hasMany('Product');
+    }
+})
+
+module.exports = { Product, Category }

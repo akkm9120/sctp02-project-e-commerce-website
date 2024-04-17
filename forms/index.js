@@ -4,6 +4,7 @@ const forms = require('forms');
 // create some shortcuts
 const fields = forms.fields;
 const validators = forms.validators;
+const widgets = forms.widgets;
 
 const bootstrapField = function (name, object) {
     if (!Array.isArray(object.widget.classes)) { object.widget.classes = []; }
@@ -28,7 +29,7 @@ const bootstrapField = function (name, object) {
 
 // create a function that will
 // create a form object
-const createProductForm = () => {
+const createProductForm = (cateogries) => {
     // the object in the parameter
     // is the form definition
     return forms.create({
@@ -44,6 +45,14 @@ const createProductForm = () => {
         'description': fields.string({
             required: true,
             errorAfterField: true
+        }),
+        'category_id': fields.string({
+            label: 'Category',
+            required: true,
+            errorAfterField: true,
+            widget: widgets.select(), // use the select dropdown
+            choices: cateogries
+
         })
     })
 }

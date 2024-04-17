@@ -18,6 +18,9 @@
         <th>
             Description
         </th>
+        <th>
+            Category
+        </th>
         <th></th>
     </thead>
     {{#each products}}
@@ -33,6 +36,9 @@
         </td>
         <td>
             {{this.description}}
+        </td>
+        <td>
+            {{this.category.name}}
         </td>
         <td>
             <a href="/products/update-product/{{this.id}}"
