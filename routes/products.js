@@ -87,21 +87,28 @@ router.get('/update-product/:productId', async function(req,res){
     const product = await Product.where({
         'id': productId
     }).fetch({
-        require: true
+        require: true,
+        withRelated:['tags']  // when fetching the products, also fetch tags information
     });
 
     // get all the categories
-      // get all the categories
-      const allCategories = await Category.fetchAll().map( category => [ category.get('id'), category.get('name')]);
+    const allCategories = await Category.fetchAll().map( category => [ category.get('id'), category.get('name')]);
+
+     // get all the tags 
+     const allTags = await Tag.fetchAll().map (t => [t.get('id'), t.get('name')]);
 
     // create the product form
-    const productForm = createProductForm(allCategories);
+    const productForm = createProductForm(allCategories, allTags);
 
     // prefill the form with values from the product 
     productForm.fields.name.value = product.get('name');
     productForm.fields.cost.value = product.get('cost');
     productForm.fields.description.value = product.get('description');
     productForm.fields.category_id.value = product.get('category_id');
+
+    // get the ids of all the tags that the product is related to
+    const selectedTags = await product.related('tags').pluck('id');
+    productForm.fields.tags.value = selectedTags;
 
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),
@@ -120,13 +127,29 @@ router.post('/update-product/:productId', async function(req,res){
             const product = await Product.where({
                 'id': req.params.productId
             }).fetch({
+                withRelated:['tags'],
                 require: true  // make sure the product actually exists
             });
 
             // if every key in form.data is one column in a product row,
             // we can use the following shortcut:
-            product.set(form.data);
+            const {tags, ...productData} = form.data;
+            product.set(productData);
             await product.save();
+
+            // update the relationships
+            
+            // 1. convert the tags from string to array (tags will contain a string "1,2")
+            const tagIds = tags.split(',');
+
+            // 2. remove all the tags
+            // ...get an array of the ids of the tags related to the product
+            const existingTagIds = await product.related('tags').pluck('id');
+            console.log(existingTagIds);
+            await product.tags().detach(existingTagIds);  // detach is to remove from a M:N relationship
+
+            await product.tags().attach(tagIds);
+
             res.redirect('/products/')
         },
         'empty': function(form) {
