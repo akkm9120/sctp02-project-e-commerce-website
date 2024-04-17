@@ -62,6 +62,12 @@ router.post('/add-product', function(req,res){
                 await product.tags().attach(form.data.tags.split(','));
             }
             
+            // a flash message can only be set before a redirect
+            // req.flash has two arugments: 
+            // 1st: the type of message to show (it's up to the developer to define)
+            // 2nd: what message to show
+            // req.flash will add a new flash message to the current session
+            req.flash('success_messages', 'New product has been created successfully');
             res.redirect("/products/");
         },
         'empty': function(form) {
@@ -186,6 +192,7 @@ router.post('/delete-product/:productId', async function(req,res){
         required: true
     });
 
+    req.flash('error_messages', `${product.get('name')} has been deleted`);
     await product.destroy();
     res.redirect('/products');
 
