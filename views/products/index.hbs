@@ -21,6 +21,9 @@
         <th>
             Category
         </th>
+        <th>
+            Tags
+        </th>
         <th></th>
     </thead>
     {{#each products}}
@@ -39,6 +42,13 @@
         </td>
         <td>
             {{this.category.name}}
+        </td>
+        <td>
+            {{#each this.tags}}
+            <span class="badge bg-primary">
+                {{this.name}}
+            </span>
+            {{/each}}
         </td>
         <td>
             <a href="/products/update-product/{{this.id}}"

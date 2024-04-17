@@ -21,6 +21,9 @@ const Product = bookshelf.model('Product', {
     // the name of the FK should be the Model name of the other party but in small case, and singular
     category:function() {
         return this.belongsTo('Category'); // one Product model instance belongs to one Category
+    },
+    tags:function() {
+        return this.belongsToMany('Tag');
     }
 } );
 
@@ -35,4 +38,11 @@ const Category = bookshelf.model('Category', {
     }
 })
 
-module.exports = { Product, Category }
+const Tag = bookshelf.model('Tag', {
+    tableName: 'tags',
+    products() {
+        return this.belongsToMany('Product');
+    }
+})
+
+module.exports = { Product, Category, Tag }

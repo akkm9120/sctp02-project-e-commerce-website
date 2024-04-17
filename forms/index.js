@@ -29,7 +29,7 @@ const bootstrapField = function (name, object) {
 
 // create a function that will
 // create a form object
-const createProductForm = (cateogries) => {
+const createProductForm = (cateogries, tags) => {
     // the object in the parameter
     // is the form definition
     return forms.create({
@@ -52,7 +52,12 @@ const createProductForm = (cateogries) => {
             errorAfterField: true,
             widget: widgets.select(), // use the select dropdown
             choices: cateogries
-
+        }),
+        'tags':fields.string({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.multipleSelect(),
+            choices: tags
         })
     })
 }

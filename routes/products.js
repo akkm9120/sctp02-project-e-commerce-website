@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 // require in the model
-const { Product, Category } = require('../models');
+const { Product, Category, Tag } = require('../models');
 const { createProductForm, bootstrapField } = require('../forms');
 
 router.get('/', async function(req,res){
     // use the Product model to get all the products
     const products = await Product.collection().fetch({
-        withRelated:['category']
+        withRelated:['category', 'tags']
     });
     // products.toJSON() convert the table rows into JSON data format
     res.render('products/index', {
@@ -21,7 +21,10 @@ router.get('/add-product', async function(req,res){
     // get all the categories
     const allCategories = await Category.fetchAll().map( category => [ category.get('id'), category.get('name')]);
 
-    const productForm = createProductForm(allCategories);
+    // get all the tags 
+    const allTags = await Tag.fetchAll().map (t => [t.get('id'), t.get('name')]);
+
+    const productForm = createProductForm(allCategories, allTags);
     res.render('products/create', {
         form: productForm.toHTML(bootstrapField)
     })
@@ -51,6 +54,14 @@ router.post('/add-product', function(req,res){
             // same as:
             // INSERT INTO products (name, cost, description)
             // VALUES (${form.data.name}, ${form.data.cost}, ${form.data.description})
+           
+            // save the tags relationship
+            if (form.data.tags) {
+                // form.data.tags will be a string of the selected tag ids seperated by comma
+                // eg: "1,2"
+                await product.tags().attach(form.data.tags.split(','));
+            }
+            
             res.redirect("/products/");
         },
         'empty': function(form) {
