@@ -26,13 +26,23 @@ router.get('/add-product', async function(req,res){
 
     const productForm = createProductForm(allCategories, allTags);
     res.render('products/create', {
-        form: productForm.toHTML(bootstrapField)
+        form: productForm.toHTML(bootstrapField),
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
     })
 });
 
-router.post('/add-product', function(req,res){
+router.post('/add-product', async function(req,res){
+
+     // get all the categories
+     const allCategories = await Category.fetchAll().map( category => [ category.get('id'), category.get('name')]);
+
+     // get all the tags 
+     const allTags = await Tag.fetchAll().map (t => [t.get('id'), t.get('name')]);
+
     // create the product form object using caolan form
-    const productForm = createProductForm();
+    const productForm = createProductForm(allCategories, allTags);
     // using the form object to handle the request
     productForm.handle(req, {
         'success': async function(form) {
@@ -48,6 +58,7 @@ router.post('/add-product', function(req,res){
             product.set('cost', form.data.cost);
             product.set('description', form.data.description);
             product.set('category_id', form.data.category_id)
+            product.set('image_url', form.data.image_url);
             // save the product to the database
             await product.save();
 
@@ -118,7 +129,10 @@ router.get('/update-product/:productId', async function(req,res){
 
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),
-        'product': product.toJSON()
+        'product': product.toJSON(),
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
     })
 });
 

@@ -7,6 +7,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const csurf = require('csurf');
+require('dotenv').config();
 
 const app = express();
 
@@ -85,12 +86,13 @@ async function main() {
     const landingRoutes = require('./routes/landing');
     const productRoutes = require('./routes/products');
     const userRoutes = require('./routes/users');
-
+    const cloudinaryRoutes = require('./routes/cloudinary');
 
     // use the landing routes
     app.use('/', landingRoutes);
     app.use('/products', productRoutes);
     app.use('/users', userRoutes);
+    app.use('/cloudinary', cloudinaryRoutes);
 
   
 }

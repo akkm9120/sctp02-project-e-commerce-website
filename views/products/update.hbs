@@ -3,7 +3,66 @@
 <h1>Updating {{product.name}}</h1>
 <form method="POST">
     {{{form}}}
+
+    {{#if product.image_url}} 
+    <img src="{{product.image_url}}" id="uploaded_image"/>
+    {{else}}
+    <img src="" style="display:none" id="uploaded_image"/>
+    {{/if}}
+
+      <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+
+    <a href="#" class="btn btn-primary" id="upload_widget">Upload</a>
+
     <input type="submit" value="Update" class="btn btn-primary mt-3"/>
 </form>
 {{/block}}
+
+{{#block "js"}}
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- cloudinary widget -->
+<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+
+<!-- our own script for uploading -->
+<script>
+    // function to get a signature from our Express app
+    // this function is called by the upload widget
+    async function generateSignature(callback, params_to_sign) {
+        const response  = await axios.get('/cloudinary/sign', {
+            params: {
+                params_to_sign
+            }
+        });
+        // response.data will contain the signature from our Express route
+        callback(response.data);
+    }
+
+    // create the Upload widget
+    const widget = cloudinary.createUploadWidget({
+        cloudName: "{{cloudinaryName}}",
+        apiKey: "{{cloudinaryApiKey}}",
+        uploadPreset: "{{cloudinaryPreset}}",
+        uploadSignature: generateSignature
+    }, function(err, result){
+        if (!err && result && result.event =="success") {
+            document.querySelector("#id_image_url").value = result.info.url;
+            const uploadedImage = document.querySelector("#uploaded_image");
+            uploadedImage.style.display = "block";
+            uploadedImage.src = result.info.thumbnail_url;
+        }
+    });
+
+    document.querySelector("#upload_widget")
+        .addEventListener("click", function(){
+            widget.open();
+        })
+
+</script>
+
+{{/block}}
+
+
 {{/extends}}
