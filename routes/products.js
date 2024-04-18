@@ -3,26 +3,92 @@ const router = express.Router();
 
 // require in the model
 const { Product, Category, Tag } = require('../models');
-const { createProductForm, bootstrapField } = require('../forms');
+const { createProductForm, bootstrapField, createSearchForm } = require('../forms');
 
-router.get('/', async function(req,res){
-    // use the Product model to get all the products
-    const products = await Product.collection().fetch({
-        withRelated:['category', 'tags']
-    });
-    // products.toJSON() convert the table rows into JSON data format
-    res.render('products/index', {
-        products: products.toJSON()
-    } );
-});
-
-router.get('/add-product', async function(req,res){
+router.get('/', async function (req, res) {
 
     // get all the categories
-    const allCategories = await Category.fetchAll().map( category => [ category.get('id'), category.get('name')]);
+    const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
+    allCategories.unshift([0, '----------']);
+
+     // get all the tags 
+     const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
+
+    const searchForm = createSearchForm(allCategories, allTags);
+    searchForm.handle(req, {
+        'success': async function (form) {
+            // SELECT * FROM products
+            const queryBuilder = Product.collection();  // create a new query builder
+        
+            // if the user did fill the name field in the search form
+            if (form.data.name) {
+                // then append the search for name WHERE clause to the query builder
+                // eqv. WHERE name LIKE `%${form.data.name}%`
+                queryBuilder.where('name', 'like', "%" + form.data.name + "%");
+            }
+
+            if (form.data.min_cost) {
+                queryBuilder.where('cost', '>=', form.data.min_cost);
+            }
+
+            if (form.data.max_cost) {
+                queryBuilder.where('cost', '<=', form.data.max_cost);
+            }
+
+            if (form.data.category_id && form.data.category_id != "0") {
+                queryBuilder.where('category_id', "=", form.data.category_id);
+            }
+
+            if (form.data.tags) {
+                queryBuilder.query('join', 'products_tags', 'products.id', 'product_id')
+                    .where('tag_id', 'in', form.data.tags.split(','));
+            }
+
+            // when we call fetch  on the queryBuilder, then the command
+            // is sent to the SQL database
+            const products = await queryBuilder.fetch({
+                withRelated:['category', 'tags']
+            });
+            res.render('products/index', {
+                products: products.toJSON(),
+                searchForm: form.toHTML(bootstrapField)
+            });
+        },
+        'empty': async function (form) {
+
+            // if the user submits an empty search form, then just fetch
+            // all the products
+
+            // use the Product model to get all the products
+            const products = await Product.collection().fetch({
+                withRelated: ['category', 'tags']
+            });
+            // products.toJSON() convert the table rows into JSON data format
+            res.render('products/index', {
+                products: products.toJSON(),
+                searchForm: searchForm.toHTML(bootstrapField)
+            });
+        },
+        'error': async function (form) {
+
+            // if the user's search form has error, let's just send back the form
+            res.render('products/index', {
+                products: [],
+                searchForm: form.toHTML(bootstrapField)
+            });
+        }
+    })
+
+
+});
+
+router.get('/add-product', async function (req, res) {
+
+    // get all the categories
+    const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
 
     // get all the tags 
-    const allTags = await Tag.fetchAll().map (t => [t.get('id'), t.get('name')]);
+    const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
 
     const productForm = createProductForm(allCategories, allTags);
     res.render('products/create', {
@@ -33,19 +99,19 @@ router.get('/add-product', async function(req,res){
     })
 });
 
-router.post('/add-product', async function(req,res){
+router.post('/add-product', async function (req, res) {
 
-     // get all the categories
-     const allCategories = await Category.fetchAll().map( category => [ category.get('id'), category.get('name')]);
+    // get all the categories
+    const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
 
-     // get all the tags 
-     const allTags = await Tag.fetchAll().map (t => [t.get('id'), t.get('name')]);
+    // get all the tags 
+    const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
 
     // create the product form object using caolan form
     const productForm = createProductForm(allCategories, allTags);
     // using the form object to handle the request
     productForm.handle(req, {
-        'success': async function(form) {
+        'success': async function (form) {
             // the forms has no error
             // to access each field in the submitted form
             // we use form.data.<fieldname>
@@ -65,14 +131,14 @@ router.post('/add-product', async function(req,res){
             // same as:
             // INSERT INTO products (name, cost, description)
             // VALUES (${form.data.name}, ${form.data.cost}, ${form.data.description})
-           
+
             // save the tags relationship
             if (form.data.tags) {
                 // form.data.tags will be a string of the selected tag ids seperated by comma
                 // eg: "1,2"
                 await product.tags().attach(form.data.tags.split(','));
             }
-            
+
             // a flash message can only be set before a redirect
             // req.flash has two arugments: 
             // 1st: the type of message to show (it's up to the developer to define)
@@ -81,13 +147,13 @@ router.post('/add-product', async function(req,res){
             req.flash('success_messages', 'New product has been created successfully');
             res.redirect("/products/");
         },
-        'empty': function(form) {
+        'empty': function (form) {
             // the user submitted an empty form
             res.render('products/create', {
                 form: productForm.toHTML(bootstrapField)
             })
         },
-        'error': function(form) {
+        'error': function (form) {
             // the user submitted a form with error
             res.render('products/create', {
                 form: form.toHTML(bootstrapField)
@@ -96,7 +162,7 @@ router.post('/add-product', async function(req,res){
     })
 });
 
-router.get('/update-product/:productId', async function(req,res){
+router.get('/update-product/:productId', async function (req, res) {
     const productId = req.params.productId;
 
     // fetch the product that we want to update
@@ -105,14 +171,14 @@ router.get('/update-product/:productId', async function(req,res){
         'id': productId
     }).fetch({
         require: true,
-        withRelated:['tags']  // when fetching the products, also fetch tags information
+        withRelated: ['tags']  // when fetching the products, also fetch tags information
     });
 
     // get all the categories
-    const allCategories = await Category.fetchAll().map( category => [ category.get('id'), category.get('name')]);
+    const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
 
-     // get all the tags 
-     const allTags = await Tag.fetchAll().map (t => [t.get('id'), t.get('name')]);
+    // get all the tags 
+    const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
 
     // create the product form
     const productForm = createProductForm(allCategories, allTags);
@@ -136,29 +202,29 @@ router.get('/update-product/:productId', async function(req,res){
     })
 });
 
-router.post('/update-product/:productId', async function(req,res){
+router.post('/update-product/:productId', async function (req, res) {
     // 1. create the form object
     const productForm = createProductForm();
 
     // 2. use the form object to handle the request
     productForm.handle(req, {
-        'success':async function(form) {
+        'success': async function (form) {
             // find the product that the user want to modify
             const product = await Product.where({
                 'id': req.params.productId
             }).fetch({
-                withRelated:['tags'],
+                withRelated: ['tags'],
                 require: true  // make sure the product actually exists
             });
 
             // if every key in form.data is one column in a product row,
             // we can use the following shortcut:
-            const {tags, ...productData} = form.data;
+            const { tags, ...productData } = form.data;
             product.set(productData);
             await product.save();
 
             // update the relationships
-            
+
             // 1. convert the tags from string to array (tags will contain a string "1,2")
             const tagIds = tags.split(',');
 
@@ -172,12 +238,12 @@ router.post('/update-product/:productId', async function(req,res){
 
             res.redirect('/products/')
         },
-        'empty': function(form) {
+        'empty': function (form) {
             res.render('products/update', {
                 form: form.toHTML(bootstrapField)
             })
         },
-        'error': function(form) {
+        'error': function (form) {
             res.render('products/update', {
                 form: form.toHTML(bootstrapField)
             })
@@ -185,7 +251,7 @@ router.post('/update-product/:productId', async function(req,res){
     })
 })
 
-router.get('/delete-product/:productId', async function(req,res){
+router.get('/delete-product/:productId', async function (req, res) {
     const product = await Product.where({
         'id': req.params.productId
     }).fetch({
@@ -198,7 +264,7 @@ router.get('/delete-product/:productId', async function(req,res){
 
 })
 
-router.post('/delete-product/:productId', async function(req,res){
+router.post('/delete-product/:productId', async function (req, res) {
     // get the product which we want to delete
     const product = await Product.where({
         'id': req.params.productId
