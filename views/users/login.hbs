@@ -5,6 +5,9 @@
 <form method="POST">
     {{{loginForm}}}
     <input type="submit" class="btn btn-primary mt-3" value="Login"/>
+
+    {{!-- CSRF token --}}
+    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
 </form>
 {{/block}}
 

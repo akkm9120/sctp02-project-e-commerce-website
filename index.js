@@ -6,6 +6,7 @@ require('dotenv').config();
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
+const csurf = require('csurf');
 
 const app = express();
 
@@ -53,6 +54,30 @@ app.use(function(req,res, next){
 app.use(function(req,res,next){
     res.locals.user = req.session.user;
     next();
+})
+
+// enable csurf for CSRF protection after sessions are enabled
+// because csurf requires sessions to work
+app.use(csurf());
+
+// middleware to share the CSRF token with all hbs files
+app.use(function(req,res,next){
+    // req.csrfToken() is available because of `app.use(csurf())`
+    res.locals.csrfToken = req.csrfToken();
+    next();
+})
+
+// middleware to handle csrf errors
+app.use(function(err, req, res, next){
+    // if the middleware function has four parameters
+    // then it is an error handler for the middleware
+    // directly before it
+    if (err && err.code == "EBADCSRFTOKEN") {
+        req.flash("error_messages", "The form has expired, please try again");
+        res.redirect('back'); // go back one page
+    } else {
+        next();
+    }
 })
 
 async function main() {
