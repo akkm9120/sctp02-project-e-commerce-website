@@ -1,0 +1,53 @@
+const {Product, Category} = require('../models');
+
+async function getAllProducts() {
+    const products = await Product.collection().fetch({
+        withRelated: ['category', 'tags']
+    });
+    return products;
+}
+
+async function getAllCategories() {
+    const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
+    return allCategories;
+}
+
+async function getAllTags() {
+     const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
+     return allTags;
+}
+
+async function createProduct(productData) {
+    const product = new Product();
+
+
+     // same as:
+            // INSERT INTO products (name, cost, description)
+            // VALUES (${form.data.name}, ${form.data.cost}, ${form.data.description})
+
+    product.set('name', productData.name)
+    product.set('cost', productData.cost);
+    product.set('description', productData.description);
+    product.set('category_id', productData.category_id)
+    product.set('image_url', productData.image_url);
+    // save the product to the database
+    await product.save();
+
+    // save the tags relationship
+    if (productData.tags) {
+        // form.data.tags will be a string of the selected tag ids seperated by comma
+        // eg: "1,2"
+        await product.tags().attach(productData.tags.split(','));
+    }
+
+    return product;
+}
+
+async function updateProduct(product, newProductData) {
+    product.set(newProductData);
+    await product.save();
+}
+
+module.exports = {
+    getAllProducts, getAllCategories, getAllTags, createProduct, updateProduct
+}

@@ -4,15 +4,16 @@ const router = express.Router();
 // require in the model
 const { Product, Category, Tag } = require('../models');
 const { createProductForm, bootstrapField, createSearchForm } = require('../forms');
+const dataLayer = require('../dal/products')
 
 router.get('/', async function (req, res) {
 
     // get all the categories
-    const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
+    const allCategories = await dataLayer.getAllCategories();
     allCategories.unshift([0, '----------']);
 
-     // get all the tags 
-     const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
+    // get all the tags 
+    const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
 
     const searchForm = createSearchForm(allCategories, allTags);
     searchForm.handle(req, {
@@ -60,9 +61,8 @@ router.get('/', async function (req, res) {
             // all the products
 
             // use the Product model to get all the products
-            const products = await Product.collection().fetch({
-                withRelated: ['category', 'tags']
-            });
+            const products = await dataLayer.getAllProducts();
+
             // products.toJSON() convert the table rows into JSON data format
             res.render('products/index', {
                 products: products.toJSON(),
@@ -112,32 +112,9 @@ router.post('/add-product', async function (req, res) {
     // using the form object to handle the request
     productForm.handle(req, {
         'success': async function (form) {
-            // the forms has no error
-            // to access each field in the submitted form
-            // we use form.data.<fieldname>
-
-
             // create an instance of the Product model
             // an instance of a product is one row in the corresponding table
-            const product = new Product();
-            product.set('name', form.data.name)
-            product.set('cost', form.data.cost);
-            product.set('description', form.data.description);
-            product.set('category_id', form.data.category_id)
-            product.set('image_url', form.data.image_url);
-            // save the product to the database
-            await product.save();
-
-            // same as:
-            // INSERT INTO products (name, cost, description)
-            // VALUES (${form.data.name}, ${form.data.cost}, ${form.data.description})
-
-            // save the tags relationship
-            if (form.data.tags) {
-                // form.data.tags will be a string of the selected tag ids seperated by comma
-                // eg: "1,2"
-                await product.tags().attach(form.data.tags.split(','));
-            }
+            const product = await dataLayer.createProduct(form.data);
 
             // a flash message can only be set before a redirect
             // req.flash has two arugments: 
@@ -167,18 +144,13 @@ router.get('/update-product/:productId', async function (req, res) {
 
     // fetch the product that we want to update
     // emulate: SELECT * from products WHERE id = ${productId}
-    const product = await Product.where({
-        'id': productId
-    }).fetch({
-        require: true,
-        withRelated: ['tags']  // when fetching the products, also fetch tags information
-    });
+    const product = await dataLayer.getProductById(productId);
 
     // get all the categories
-    const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
+    const allCategories = await dataLayer.getAllCategories();
 
     // get all the tags 
-    const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
+    const allTags = await dataLayer.getAllTags();
 
     // create the product form
     const productForm = createProductForm(allCategories, allTags);
@@ -220,8 +192,7 @@ router.post('/update-product/:productId', async function (req, res) {
             // if every key in form.data is one column in a product row,
             // we can use the following shortcut:
             const { tags, ...productData } = form.data;
-            product.set(productData);
-            await product.save();
+            await dataLayer.updateProduct(product, productData);
 
             // update the relationships
 
