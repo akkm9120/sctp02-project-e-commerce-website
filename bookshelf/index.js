@@ -5,12 +5,12 @@
 const knex = require('knex')(
     {
         // client refers to what database technology we are using
-        client: 'mysql',
+        client: process.env.DB_DRIVER,
         connection: {
-            user: 'foo',
-            password:'bar',
-            database:'organic',
-            host:'127.0.0.1'   // aka 'localhost'
+            user: process.env.DB_USER,
+            password:process.env.DB_PASSWORD,
+            database:process.env.DB_DATABASE,
+            host:process.env.DB_HOST   // aka 'localhost'
         }
     }
 );
