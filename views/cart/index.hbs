@@ -1,0 +1,22 @@
+{{#extends "base"}}
+
+{{#block "content"}}
+
+{{#each cartItems}}
+<div class="card">
+    <div class="card-body">
+        <div class="card-title">
+            <h3>{{this.product.name}}</h3>
+        </div>
+        <ul>
+            <li>Category: {{this.product.category.name}}</li>
+            <li>Cost: {{this.product.cost}}</li>
+            <li>Quantity: {{this.quantity}}</li>
+        </ul>
+    </div>
+</div>
+{{/each}}
+
+{{/block}}
+
+{{/extends}}

@@ -1,4 +1,14 @@
-const {Product, Category} = require('../models');
+const { Product, Category } = require('../models');
+
+async function getProductById(productId) {
+    const product = await Product.where({
+        'id': productId
+    }).fetch({
+        require: true,
+        withRelated: ['tags']  // when fetching the products, also fetch tags information
+    });
+    return product;
+}
 
 async function getAllProducts() {
     const products = await Product.collection().fetch({
@@ -13,17 +23,17 @@ async function getAllCategories() {
 }
 
 async function getAllTags() {
-     const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
-     return allTags;
+    const allTags = await Tag.fetchAll().map(t => [t.get('id'), t.get('name')]);
+    return allTags;
 }
 
 async function createProduct(productData) {
     const product = new Product();
 
 
-     // same as:
-            // INSERT INTO products (name, cost, description)
-            // VALUES (${form.data.name}, ${form.data.cost}, ${form.data.description})
+    // same as:
+    // INSERT INTO products (name, cost, description)
+    // VALUES (${form.data.name}, ${form.data.cost}, ${form.data.description})
 
     product.set('name', productData.name)
     product.set('cost', productData.cost);
@@ -49,5 +59,10 @@ async function updateProduct(product, newProductData) {
 }
 
 module.exports = {
-    getAllProducts, getAllCategories, getAllTags, createProduct, updateProduct
+    getAllProducts, 
+    getAllCategories, 
+    getAllTags, 
+    createProduct, 
+    updateProduct,
+    getProductById
 }
