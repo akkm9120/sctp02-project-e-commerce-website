@@ -19,6 +19,7 @@ In the terminal, type:
     API Key, API Secret and the Upload Preset respectively
 3. Install all dependencies with `yarn install`
 4. Run all migration files with `npm run migrate up`
+6. Install nodemon with `npm install -g nodemon`
 5. Run the application with `npm run start`
 6. Go to `/users/register` in the browser and register a new user
 7. Go to `/products/add-product` and add a couple of products
