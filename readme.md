@@ -6,7 +6,7 @@ In the terminal, type:
     ```
     CLOUDINARY_NAME=
     CLOUDINARY_API_KEY=
-    CLOUDINARY_API_SECRET=T
+    CLOUDINARY_API_SECRET=
     CLOUDINARY_UPLOAD_PRESET=
     DB_DRIVER=mysql
     DB_USER=foo
