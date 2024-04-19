@@ -22,4 +22,15 @@ async function getCart(userId) {
     return cartItems;
 }
 
-module.exports = {addToCart, getCart}
+async function removeFromCart(userId, productId) {
+    return await cartDataLayer.removeFromCart(userId, productId);
+}
+
+async function updateQuantity(userId, productId, newQuantity){
+    // ideas for logic:
+    // 1. calculate shipping cost
+    // 2. make sure there is enough stock
+    return await cartDataLayer.updateQuantity(userId, productId, newQuantity);
+}
+
+module.exports = {addToCart, getCart, removeFromCart, updateQuantity}
