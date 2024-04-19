@@ -1,16 +1,24 @@
-To start mysql, in the terminal, type in `mysql -u root`
+# Setting up the project
 
-# Create a new database user
-In the MySQL CLI:
-```
-CREATE USER 'ahkow'@'localhost' IDENTIFIED BY 'rotiprata123';
-```
+In the terminal, type:
+1. mysql -u root < setup.sql
+2. Create the following `.env` file:
+    ```
+    CLOUDINARY_NAME=
+    CLOUDINARY_API_KEY=
+    CLOUDINARY_API_SECRET=T
+    CLOUDINARY_UPLOAD_PRESET=
+    DB_DRIVER=mysql
+    DB_USER=foo
+    DB_PASSWORD=bar
+    DB_DATABASE=organic
+    DB_HOST=127.0.0.1
+    ```
 
-```
-GRANT ALL PRIVILEGES on sakila.* TO 'ahkow'@'localhost' WITH GRANT OPTION;
-```
-**Note:** Replace *sakila* with the name of the database you want the user to have access to
- 
- ```
-FLUSH PRIVILEGES;
-```
+    For Cloudinary upload to work, you must provide the Cloudinary name,
+    API Key, API Secret and the Upload Preset respectively
+3. Install all dependencies with `yarn install`
+4. Run all migration files with `npm run migrate up`
+5. Run the application with `npm run start`
+6. Go to `/users/register` in the browser and register a new user
+7. Go to `/products/add-product` and add a couple of products
