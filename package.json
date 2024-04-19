@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "node node_modules/db-migrate/bin/db-migrate",
-    "start":"nodemon --ignore sessions"
+    "start": "nodemon --ignore sessions"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +25,7 @@
     "knex": "^3.1.0",
     "mysql": "^2.18.1",
     "session-file-store": "^1.5.0",
+    "stripe": "^15.3.0",
     "wax-on": "^1.2.2"
   }
 }
