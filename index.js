@@ -59,12 +59,24 @@ app.use(function(req,res,next){
 
 // enable csurf for CSRF protection after sessions are enabled
 // because csurf requires sessions to work
-app.use(csurf());
+const csurfInstance = csurf();
+
+// for csrf protection exclusion
+app.use(function(req,res,next){
+    // check if the request is  meant for the webhook
+    if (req.url === "/checkout/process_payment") {
+        // exclude from CSRF protection
+        return next();
+    } 
+    csurfInstance(req,res,next);
+})
 
 // middleware to share the CSRF token with all hbs files
 app.use(function(req,res,next){
     // req.csrfToken() is available because of `app.use(csurf())`
-    res.locals.csrfToken = req.csrfToken();
+    if (req.csrfToken) {
+        res.locals.csrfToken = req.csrfToken();
+    }
     next();
 })
 
