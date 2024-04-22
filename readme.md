@@ -13,6 +13,10 @@ In the terminal, type:
     DB_PASSWORD=bar
     DB_DATABASE=organic
     DB_HOST=127.0.0.1
+    STRIPE_PUBLISHABLE_KEY=
+    STRIPE_SECRET_KEY=
+    STRIPE_SUCCESS_URL=
+    STRIPE_CANCEL_URL=
     ```
 
     For Cloudinary upload to work, you must provide the Cloudinary name,
