@@ -28,6 +28,8 @@ app.use(
     })
 );
 
+
+
 // enable sessions
 // req.session is only available after you enable sessions
 app.use(session({
@@ -64,7 +66,7 @@ const csurfInstance = csurf();
 // for csrf protection exclusion
 app.use(function(req,res,next){
     // check if the request is  meant for the webhook
-    if (req.url === "/checkout/process_payment") {
+    if (req.url === "/checkout/process_payment" || req.url.slice(0, 5) == '/api/') {
         // exclude from CSRF protection
         return next();
     } 
@@ -102,6 +104,10 @@ async function main() {
     const shoppingCartRoutes = require('./routes/shoppingCart');
     const checkoutRoutes = require('./routes/checkout')
 
+    const api = {
+        products: require('./routes/api/products')
+    }
+
     // use the landing routes
     app.use('/', landingRoutes);
     app.use('/products', productRoutes);
@@ -109,6 +115,9 @@ async function main() {
     app.use('/cloudinary', cloudinaryRoutes);
     app.use('/cart', shoppingCartRoutes);
     app.use('/checkout', checkoutRoutes);
+
+    // for RESTFul API endpoints
+    app.use('/api/products',  express.json(), api.products);
 
   
 }

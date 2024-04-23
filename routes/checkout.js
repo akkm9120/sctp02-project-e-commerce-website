@@ -45,7 +45,7 @@ router.get('/', [checkIfAuthenticated], async function (req, res) {
         success_url: process.env.STRIPE_SUCCESS_URL,
         cancel_url: process.env.STRIPE_CANCEL_URL,
         metadata: {
-            user_id: req.session.userId
+            user_id: req.session.user.id
         }
     }
 
@@ -73,7 +73,6 @@ router.get('/cancel', function (req, res) {
 //    Cannot use express.json() because the request sent by Stripe has lot of special characters
 //    which express.json() will malform if we use it
 router.post('/process_payment', express.raw({ type: 'application/json' }), async function (req, res) {
-
 
     const payload = req.body;
 

@@ -1,4 +1,4 @@
-const { Product, Category } = require('../models');
+const { Product, Category, Tag } = require('../models');
 
 async function getProductById(productId) {
     const product = await Product.where({
