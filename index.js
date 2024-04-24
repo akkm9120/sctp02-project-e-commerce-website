@@ -28,7 +28,8 @@ app.use(
     })
 );
 
-
+// enable CORS BEFORE SESSIONS
+app.use(cors());
 
 // enable sessions
 // req.session is only available after you enable sessions
@@ -105,7 +106,8 @@ async function main() {
     const checkoutRoutes = require('./routes/checkout')
 
     const api = {
-        products: require('./routes/api/products')
+        products: require('./routes/api/products'),
+        users: require('./routes/api/users')
     }
 
     // use the landing routes
@@ -118,6 +120,7 @@ async function main() {
 
     // for RESTFul API endpoints
     app.use('/api/products',  express.json(), api.products);
+    app.use('/api/users', express.json(), api.users);
 
   
 }
