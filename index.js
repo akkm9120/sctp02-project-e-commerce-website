@@ -95,6 +95,7 @@ app.use(function(err, req, res, next){
     }
 })
 
+
 async function main() {
     // routes will be inside here
     const landingRoutes = require('./routes/landing');

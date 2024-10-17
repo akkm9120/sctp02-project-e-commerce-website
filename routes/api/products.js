@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const productDataLayer = require('../../dal/products');
+const productDataLayer = require('../../data_access_layer/products');
 const { createProductForm } = require('../../forms');
 
 

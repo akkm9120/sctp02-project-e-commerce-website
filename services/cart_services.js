@@ -1,4 +1,4 @@
-const cartDataLayer = require('../dal/cart_items');
+const cartDataLayer = require('../data_access_layer/cart_items');
 
 async function addToCart(userId, productId, quantity) {
 
