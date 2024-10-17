@@ -85,6 +85,9 @@ const createRegistrationForm = () => {
     })
 }
 
+
+
+
 const createLoginForm = () => {
     return forms.create({
         'email': fields.email({

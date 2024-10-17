@@ -107,14 +107,14 @@ router.post('/login', function (req, res) {
     })
 })
 
-router.get('/profile', [checkIfAuthenticated], function(req,res){
+router.get('/profile', [checkIfAuthenticated], function (req, res) {
     const user = req.session.user;
     res.render('users/profile', {
         user
     })
 });
 
-router.get('/logout', function(req,res){
+router.get('/logout', function (req, res) {
     req.session.user = null;
     req.flash('success_messages', "Goodbye! You have been logged out!");
     res.redirect('/users/login');
