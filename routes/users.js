@@ -20,24 +20,29 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', function (req, res) {
+    console.log("preparing to go inside form");
     const userForm = createRegistrationForm();
     userForm.handle(req, {
         'success': async function (form) {
+            console.log("this is inside form success")
             const user = new User({
                 username: form.data.username,
                 password: getHashedPassword(form.data.password),
                 email: form.data.email
             });
             await user.save();
+            console.log(user);
             req.flash('success_messages', "Your account has been created successfully!");
             res.redirect('/users/login');
         },
         'empty': function (form) {
+            console.log("this is inside form success")
             res.render('users/register', {
                 userForm: form.toHTML(bootstrapField)
             })
         },
         'error': function (form) {
+            console.log("this is inside form success")
             res.render('users/register', {
                 userForm: form.toHTML(bootstrapField)
             })

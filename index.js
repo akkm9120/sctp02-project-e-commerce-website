@@ -33,14 +33,18 @@ app.use(
 // enable sessions
 // req.session is only available after you enable sessions
 app.use(session({
-    store: new FileStore(), // store session data in files
-    secret: 'keyboard cat',
+    store: new FileStore(),
+    secret: 'SecretKey',
     resave: false,
-    saveUninitialized: true // if a browser connects to the server without a session, create a new one immediately
-}))
+    saveUninitialized: true,
+}));
 
-// setup flash messages
-app.use(flash());  // enable flash messages
+app.use(flash()); //enable flash msg
+
+app.use(function(req,res,next){
+    console.log(req.session);
+    next();
+})
 
 // must do this after sessions are enabled because flash messages rely on sessions
 app.use(function(req,res, next){
@@ -98,6 +102,7 @@ app.use(function(err, req, res, next){
 
 async function main() {
     // routes will be inside here
+
     const landingRoutes = require('./routes/landing');
     const productRoutes = require('./routes/products');
     const userRoutes = require('./routes/users');

@@ -3,10 +3,12 @@
 {{#block "content"}}
 <h1>Register</h1>
 <form method="POST">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
     {{{userForm}}}
     <input type="submit" class="btn btn-primary mt-3" value="Register"/>
 
 </form>
+
 {{/block}}
 
 {{/extends}}
