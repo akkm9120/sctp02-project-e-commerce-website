@@ -6,6 +6,7 @@
         Are you sure you want to delete {{product.name}}
         <div>
             <a class="btn btn-success btn-sm" href="/products">Cancel</a>
+              <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
             <input value="Confirm" type="submit" class="btn btn-danger btn-sm"/>
         </div>
     </div>

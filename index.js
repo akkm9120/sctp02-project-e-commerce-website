@@ -41,19 +41,14 @@ app.use(session({
 
 app.use(flash()); //enable flash msg
 
-app.use(function(req,res,next){
-    console.log(req.session);
-    next();
-})
 
 // must do this after sessions are enabled because flash messages rely on sessions
 app.use(function(req,res, next){
-    // req.flash() without a second parameter
-    // return the current flash message and delete it
+     // extract out success flash messages & delete
+
     res.locals.success_messages = req.flash('success_messages');
-    
-    // extract out error flash messages
     res.locals.error_messages = req.flash('error_messages');
+    
     next();
 });
 

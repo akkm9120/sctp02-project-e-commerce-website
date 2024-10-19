@@ -30,9 +30,7 @@ const Product = bookshelf.model('Product', {
 // and model name keep to singular form of the table name
 // but the first alphabet case is upper case
 const Category = bookshelf.model('Category', {
-    // table name should always be plural
     tableName: 'categories',
-    // the name of the relationship is plural form of the model name
     products:function() {
         return this.hasMany('Product');
     }

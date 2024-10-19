@@ -13,7 +13,7 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
     crossorigin="anonymous">
 
-  <title>Hello, world!</title>
+  <title>SHOPPING</title>
 </head>
 
 <body>
@@ -41,19 +41,20 @@
         <a class="nav-link" href="/products">All Products</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link 2</a>
+        <a class="nav-link" href="/products/add-product">Add product</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link 3</a>
+        <a class="nav-link" href="#">Another Link</a>
       </li>
     </ul>
     <div>
        {{#if user}}
-        Hello, {{user.username}}
+           Hello, {{user.username}} &emsp;
         <a href="/cart" class="btn btn-success btn-sm">Cart</a>
         <a href="/users/logout" class="btn btn-danger btn-sm">Logout</a>
         {{else}}
-        <a href="/users/login" class="btn btn-success btn-sm">Log In</a>
+        <a href="/users/login" class="btn btn-success btn-sm">Log In</a> <br>
+     
        {{/if}}
     </div>
   </div>

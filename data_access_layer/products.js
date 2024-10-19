@@ -59,10 +59,10 @@ async function updateProduct(product, newProductData) {
 }
 
 module.exports = {
-    getAllProducts, 
-    getAllCategories, 
-    getAllTags, 
-    createProduct, 
+    getAllProducts,
+    getAllCategories,
+    getAllTags,
+    createProduct,
     updateProduct,
     getProductById
 }

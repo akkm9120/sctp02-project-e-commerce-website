@@ -7,7 +7,7 @@
 <h2>Search</h2>
 <form method="GET">
     {{{searchForm}}}
-    <input type="submit" class="btn btn-primary mt-3"/> 
+    <input type="submit" class="btn btn-primary mt-3" />
 </form>
 
 <table class="table">
@@ -57,11 +57,9 @@
             {{/each}}
         </td>
         <td>
-            <a href="/products/update-product/{{this.id}}"
-               class="btn btn-primary btn-sm">Update</a>
-
-            <a href="/cart/{{this.id}}/add"
-               class="btn btn-success btn-sm">Add To Cart</a>
+            <a href="/products/update-product/{{this.id}}" class="btn btn-primary btn-sm">Update</a>
+            <a href="/products/delete-product/{{this.id}}" class="btn btn-danger btn-sm">Delete</a>
+            <a href="/cart/{{this.id}}/add" class="btn btn-success btn-sm">Add To Cart</a>
         </td>
     </tr>
     {{/each}}
