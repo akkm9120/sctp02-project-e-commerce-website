@@ -4,12 +4,13 @@
 <h1>Create New Product</h1>
 <form method="POST">
     {{{form}}}
+    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
     <div>
         <a href="#" class="btn btn-primary" id="upload_widget">Upload Image</a>
         <img src="" style="display:none" id="uploaded_image"/>
     </div>
 
-    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+    
     <input type="submit" class="btn btn-primary mt-3" value="Add Product" />
 </form>
 {{/block}}

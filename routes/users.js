@@ -53,7 +53,8 @@ router.post('/register', function (req, res) {
 router.get('/login', function (req, res) {
     const loginForm = createLoginForm();
     res.render('users/login', {
-        loginForm: loginForm.toHTML(bootstrapField)
+        loginForm: loginForm.toHTML(bootstrapField),
+        isLoginPage: true
     });
 });
 

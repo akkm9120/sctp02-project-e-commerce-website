@@ -1,75 +1,99 @@
-<!doctype html>
 <html lang="en">
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-    crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
 
-  <title>SHOPPING</title>
-</head>
+    <title>shopping</title>
+  </head>
 
-<body>
+  <body>
 
-  {{#each success_messages}}
-  <div class="alert alert-success">
-    {{this}}
-  </div>
-  {{/each}}
+    {{#each success_messages}}
+      <div class="alert alert-success">
+        {{this}}
+      </div>
+    {{/each}}
 
-  {{#each error_messages}}
-  <div class="alert alert-danger">
-    {{this}}
-  </div>
-  {{/each}}
+    {{#each error_messages}}
+      <div class="alert alert-danger">
+        {{this}}
+      </div>
+    {{/each}}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">SHOPPING</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+          aria-controls="navbarContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            {{#if user}}
+              <li class="nav-item">
+                <a class="nav-link" href="/products">All Products</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/products/add-product">Add product</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Another Link</a>
+              </li>
+            {{else}}
+              <li class="nav-item">
+                <span class="nav-link text-muted">Please log in to access
+                  features</span>
+              </li>
+            {{/if}}
+          </ul>
+          <div class="d-flex">
+            {{#if user}}
+              <span class="navbar-text me-2">Hello, {{user.username}}</span>
+              <a href="/cart" class="btn btn-success btn me-2">Cart</a>
+              <a href="/users/logout" class="btn btn-danger btn">Logout</a>
+            {{else}}
+              {{#if isLoginPage}}
+                <a
+                  href="/users/register"
+                  class="btn btn-primary btn-sm"
+                >Register</a>
+              {{else}}
+                <a href="/users/login" class="btn btn-success btn-sm">Log In</a>
+              {{/if}}
+            {{/if}}
 
-  <div class="container">
-    <!-- A grey horizontal navbar that becomes vertical on small screens -->
-<nav class="navbar navbar-expand-sm bg-light">
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
 
-  <div class="container-fluid">
-    <!-- Links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="/products">All Products</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/products/add-product">Add product</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Another Link</a>
-      </li>
-    </ul>
-    <div>
-       {{#if user}}
-           Hello, {{user.username}} &emsp;
-        <a href="/cart" class="btn btn-success btn-sm">Cart</a>
-        <a href="/users/logout" class="btn btn-danger btn-sm">Logout</a>
-        {{else}}
-        <a href="/users/login" class="btn btn-success btn-sm">Log In</a> <br>
-     
-       {{/if}}
+      {{#block "content"}}{{/block}}
     </div>
-  </div>
 
-</nav>
-    {{#block "content"}}{{/block}}
-  </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
 
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
-    
     {{#block "js"}}{{/block}}
-</body>
+  </body>
 
 </html>
