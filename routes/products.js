@@ -20,7 +20,7 @@ router.get('/', async function (req, res) {
         'success': async function (form) {
             // SELECT * FROM products
             const queryBuilder = Product.collection();  // create a new query builder
-        
+
             // if the user did fill the name field in the search form
             if (form.data.name) {
                 // then append the search for name WHERE clause to the query builder
@@ -48,11 +48,11 @@ router.get('/', async function (req, res) {
             // when we call fetch  on the queryBuilder, then the command
             // is sent to the SQL database
             const products = await queryBuilder.fetch({
-                withRelated:['category', 'tags']
+                withRelated: ['category', 'tags']
             });
             res.render('products/index', {
                 products: products.toJSON(),
-                searchForm: form.toHTML(bootstrapField)
+                searchForm: form.toHTML(bootstrapField),                
             });
         },
         'empty': async function (form) {

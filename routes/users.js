@@ -54,7 +54,7 @@ router.get('/login', function (req, res) {
     const loginForm = createLoginForm();
     res.render('users/login', {
         loginForm: loginForm.toHTML(bootstrapField),
-        isLoginPage: true
+        isLoginPage: true,
     });
 });
 
@@ -84,7 +84,9 @@ router.post('/login', function (req, res) {
                         email: user.get('email')
                     }
                     req.flash('success_messages', `Welcome back ${user.get('username')}`);
+                    
                     res.redirect('/products')
+                      
                 } else {
                     req.flash('error_messages', "Invalid authentication");
                     res.status(401);

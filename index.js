@@ -5,7 +5,7 @@ const wax = require('wax-on');
 require('dotenv').config();
 const session = require('express-session');
 const flash = require('connect-flash');
-const FileStore = require('session-file-store')(session);
+const FileStore = require('session-file-store')(session);   
 const csurf = require('csurf');
 require('dotenv').config();
 
@@ -43,17 +43,17 @@ app.use(flash()); //enable flash msg
 
 
 // must do this after sessions are enabled because flash messages rely on sessions
-app.use(function(req,res, next){
-     // extract out success flash messages & delete
+app.use(function (req, res, next) {
+    // extract out success flash messages & delete
 
     res.locals.success_messages = req.flash('success_messages');
     res.locals.error_messages = req.flash('error_messages');
-    
+
     next();
 });
 
 // share the current logged in user with all hbs file
-app.use(function(req,res,next){
+app.use(function (req, res, next) {
     res.locals.user = req.session.user;
     next();
 })
@@ -63,17 +63,17 @@ app.use(function(req,res,next){
 const csurfInstance = csurf();
 
 // for csrf protection exclusion
-app.use(function(req,res,next){
+app.use(function (req, res, next) {
     // check if the request is  meant for the webhook
     if (req.url === "/checkout/process_payment" || req.url.slice(0, 5) == '/api/') {
         // exclude from CSRF protection
         return next();
-    } 
-    csurfInstance(req,res,next);
+    }
+    csurfInstance(req, res, next);
 })
 
 // middleware to share the CSRF token with all hbs files
-app.use(function(req,res,next){
+app.use(function (req, res, next) {
     // req.csrfToken() is available because of `app.use(csurf())`
     if (req.csrfToken) {
         res.locals.csrfToken = req.csrfToken();
@@ -82,7 +82,7 @@ app.use(function(req,res,next){
 })
 
 // middleware to handle csrf errors
-app.use(function(err, req, res, next){
+app.use(function (err, req, res, next) {
     // if the middleware function has four parameters
     // then it is an error handler for the middleware
     // directly before it
@@ -118,13 +118,13 @@ async function main() {
     app.use('/checkout', checkoutRoutes);
 
     // for RESTFul API endpoints
-    app.use('/api/products',  express.json(), api.products);
+    app.use('/api/products', express.json(), api.products);
 
-  
+
 }
 
 main();
 
-app.listen(3000, ()=>{
+app.listen(3000, () => {
     console.log("server has started");
 })
