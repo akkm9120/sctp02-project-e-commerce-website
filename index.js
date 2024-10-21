@@ -10,6 +10,7 @@ const csurf = require('csurf');
 require('dotenv').config();
 
 const app = express();
+const cors = require('cors');
 
 // use hbs for the view engine
 app.set('view engine', 'hbs');
@@ -118,7 +119,7 @@ async function main() {
     app.use('/checkout', checkoutRoutes);
 
     // for RESTFul API endpoints
-    app.use('/api/products', express.json(), api.products);
+    app.use('/api/products',cors(), express.json(), api.products);
 
 
 }

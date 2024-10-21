@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-
+const { checkIfAuthenticated } = require('../middlewares');
 // require in the model
 const { Product, Category, Tag } = require('../models');
 const { createProductForm, bootstrapField, createSearchForm } = require('../forms');
 const dataLayer = require('../data_access_layer/products')
 
-router.get('/', async function (req, res) {
+router.get('/', [checkIfAuthenticated], async function (req, res) {
 
     // get all the categories
     const allCategories = await dataLayer.getAllCategories();
@@ -99,7 +99,7 @@ router.get('/add-product', async function (req, res) {
     })
 });
 
-router.post('/add-product', async function (req, res) {
+router.post('/add-product', [checkIfAuthenticated], async function (req, res) {
 
     // get all the categories
     const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
