@@ -4,7 +4,7 @@ var dbm;
 var type;
 var seed;
 
-/**
+/** 
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
   */
