@@ -7,6 +7,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);   
 const csurf = require('csurf');
+
 require('dotenv').config();
 
 const app = express();

@@ -59,11 +59,11 @@ router.get('/', [checkIfAuthenticated], async function (req, res) {
 })
 
 router.get('/success', function (req, res) {
-    res.render('checkout/success');
+    res.render('checkouts/success');
 })
 
 router.get('/cancel', function (req, res) {
-    res.render('checkout/cancel')
+    res.render('checkouts/cancel')
 })
 
 // This route is the webhook for Stripe to call when a payment is successful
