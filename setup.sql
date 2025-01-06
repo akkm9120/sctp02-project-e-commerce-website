@@ -11,4 +11,4 @@ use organic;
 INSERT into categories (id,name)
 VALUES 
     (1,'Vegan'),
-    (2,'Non-Vegan');
+    (2,'Non-Vegan');npm install stripe
