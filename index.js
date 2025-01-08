@@ -12,7 +12,7 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: ['https://3000-akkm9120-project02front-umtcl5bzv03.ws-us117.gitpod.io'], // Array of allowed origins
+    origin: ['https://3000-akkm9120-project02front-umtcl5bzv03.ws-us117.gitpod.io','https://project02-frontend.vercel.app'], // Array of allowed origins
     credentials: true
 }));
 
@@ -96,7 +96,7 @@ async function main() {
     app.use('/checkout', checkoutRoutes);
 
     // RESTful API endpoints
-    app.use('/api/products', cors(), express.json(), api.products);
+    app.use('/api/products', express.json(), api.products);
     app.use('/api/orders', express.json(), api.orders);
 
 }

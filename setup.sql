@@ -11,31 +11,31 @@ use organic;
 INSERT into categories (id,name)
 VALUES 
     (1,'Vegan'),
-    (2,'Non-Vegan');npm install stripe
+    (2,'Non-Vegan');
 
 
 
-INSERT INTO orders (order_date, total_cost, delivery_date, delivery_time, delivery_address)
-VALUES
-('2025-01-08 15:05:25', 44.00, '2025-01-08', '10:00:00', '123 Main Street');
+-- INSERT INTO orders (order_date, total_cost, delivery_date, delivery_time, delivery_address)
+-- VALUES
+-- ('2025-01-08 15:05:25', 44.00, '2025-01-08', '10:00:00', '123 Main Street');
 
-INSERT INTO orders (order_date, total_cost, delivery_date, delivery_time, delivery_address)
-VALUES
-('2025-01-08 16:10:30', 55.50, '2025-01-09', '12:00:00', '456 Elm Street');
+-- INSERT INTO orders (order_date, total_cost, delivery_date, delivery_time, delivery_address)
+-- VALUES
+-- ('2025-01-08 16:10:30', 55.50, '2025-01-09', '12:00:00', '456 Elm Street');
 
     
 
-INSERT INTO order_items (order_id, product_name, quantity, price_per_unit, subtotal)
-VALUES
-(1, 'Chicken rice', 2, 10.00, 20.00),
-(1, 'Pork Belly sushi', 1, 14.00, 14.00),
-(1, 'Ice Tea', 1, 10.00, 10.00);
+-- INSERT INTO order_items (order_id, product_name, quantity, price_pe r_unit, subtotal)
+-- VALUES
+-- (1, 'Chicken rice', 2, 10.00, 20.00),
+-- (1, 'Pork Belly sushi', 1, 14.00, 14.00),
+-- (1, 'Ice Tea', 1, 10.00, 10.00);
 
-INSERT INTO order_items (order_id, product_name, quantity, price_per_unit, subtotal)
-VALUES
-(2, 'Beef Burger', 2, 12.50, 25.00),
-(2, 'Sushi Rolls', 1, 18.00, 18.00),
-(2, 'Lemonade', 1, 12.50, 12.50);
+-- INSERT INTO order_items (order_id, product_name, quantity, price_per_unit, subtotal)
+-- VALUES
+-- (2, 'Beef Burger', 2, 12.50, 25.00),
+-- (2, 'Sushi Rolls', 1, 18.00, 18.00),
+-- (2, 'Lemonade', 1, 12.50, 12.50);
 
 --    ALTER TABLE orders
 -- RENAME COLUMN orderid to order_id;
