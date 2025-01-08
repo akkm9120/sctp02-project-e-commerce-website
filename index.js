@@ -1,39 +1,37 @@
-// setup express
 const express = require('express');
 const hbs = require('hbs');
 const wax = require('wax-on');
 require('dotenv').config();
 const session = require('express-session');
 const flash = require('connect-flash');
-const FileStore = require('session-file-store')(session);   
+const FileStore = require('session-file-store')(session);
 const csurf = require('csurf');
-
-require('dotenv').config();
-
-const app = express();
 const cors = require('cors');
 
-// use hbs for the view engine
+const app = express();
+
+// Enable CORS for all routes
+app.use(cors({
+    origin: ['https://3000-akkm9120-project02front-umtcl5bzv03.ws-us117.gitpod.io'], // Array of allowed origins
+    credentials: true
+}));
+
+app.use(express.json());
+
+// Use hbs for the view engine
 app.set('view engine', 'hbs');
 
-// enable the static folder
+// Enable the static folder
 app.use(express.static('public'));
 
-// enable wax-on for template inheritance
+// Enable wax-on for template inheritance
 wax.on(hbs.handlebars);
 wax.setLayoutPath('./views/layouts');
 
-// enable forms
-app.use(
-    express.urlencoded({
-        'extended': false
-    })
-);
+// Enable forms
+app.use(express.urlencoded({ extended: false }));
 
-
-
-// enable sessions
-// req.session is only available after you enable sessions
+// Enable sessions
 app.use(session({
     store: new FileStore(),
     secret: 'SecretKey',
@@ -41,77 +39,55 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-app.use(flash()); //enable flash msg
+app.use(flash()); // Enable flash messages
 
-
-// must do this after sessions are enabled because flash messages rely on sessions
-app.use(function (req, res, next) {
-    // extract out success flash messages & delete
-
-    res.locals.success_messages = req.flash('success_messages');
-    res.locals.error_messages = req.flash('error_messages');
-
-    next();
-});
-
-// share the current logged in user with all hbs file
+// Share the current logged-in user with all hbs files
 app.use(function (req, res, next) {
     res.locals.user = req.session.user;
     next();
-})
+});
 
-// enable csurf for CSRF protection after sessions are enabled
-// because csurf requires sessions to work
+// Enable CSRF protection
 const csurfInstance = csurf();
-
-// for csrf protection exclusion
 app.use(function (req, res, next) {
-    // check if the request is  meant for the webhook
-    if (req.url === "/checkout/process_payment" || req.url.slice(0, 5) == '/api/') {
-        // exclude from CSRF protection
+    if (req.url.slice(0, 5) == '/api/') {
         return next();
     }
     csurfInstance(req, res, next);
-})
+});
 
-// middleware to share the CSRF token with all hbs files
+// Share the CSRF token with all hbs files
 app.use(function (req, res, next) {
-    // req.csrfToken() is available because of `app.use(csurf())`
     if (req.csrfToken) {
         res.locals.csrfToken = req.csrfToken();
     }
     next();
-})
+});
 
-// middleware to handle csrf errors
+// Handle CSRF errors
 app.use(function (err, req, res, next) {
-    // if the middleware function has four parameters
-    // then it is an error handler for the middleware
-    // directly before it
     if (err && err.code == "EBADCSRFTOKEN") {
         req.flash("error_messages", "The form has expired, please try again");
-        res.redirect('back'); // go back one page
+        res.redirect('back');
     } else {
         next();
     }
-})
+});
 
-
+// Routes
 async function main() {
-    // routes will be inside here
-
     const landingRoutes = require('./routes/landing');
     const productRoutes = require('./routes/products');
     const userRoutes = require('./routes/users');
     const cloudinaryRoutes = require('./routes/cloudinary');
     const shoppingCartRoutes = require('./routes/shoppingCart');
-    const checkoutRoutes = require('./routes/checkout')
+    const checkoutRoutes = require('./routes/checkout');
 
     const api = {
-        products: require('./routes/api/products')
-    }
+        products: require('./routes/api/products'),
+        orders: require('./routes/api/order')
+    };
 
-    // use the landing routes
     app.use('/', landingRoutes);
     app.use('/products', productRoutes);
     app.use('/users', userRoutes);
@@ -119,14 +95,14 @@ async function main() {
     app.use('/cart', shoppingCartRoutes);
     app.use('/checkout', checkoutRoutes);
 
-    // for RESTFul API endpoints
-    app.use('/api/products',cors(), express.json(), api.products);
-
+    // RESTful API endpoints
+    app.use('/api/products', cors(), express.json(), api.products);
+    app.use('/api/orders', express.json(), api.orders);
 
 }
 
 main();
 
 app.listen(3000, () => {
-    console.log("server has started");
-})
+    console.log("Server has started on port 3000");
+});

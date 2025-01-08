@@ -18,7 +18,7 @@ exports.setup = function (options, seedLink) {
 // to the database
 exports.up = function (db) {
   /*
-    CREATE TABLE products (
+    CREATE TABLE products (``
       id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
       name VARCHAR(100) NOT NULL
       cost INT,

@@ -6,7 +6,7 @@ cloudinary.config({
     'api_key': process.env.CLOUDINARY_API_KEY,
     'api_secret': process.env.CLOUDINARY_API_SECRET
 });
-
+ 
 // the /sign route will be called by the
 // Cloudinary Upload Widget
 router.get('/sign', async function(req,res){
