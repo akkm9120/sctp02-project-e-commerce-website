@@ -44,20 +44,19 @@ const CartItem = bookshelf.model('CartItem', {
     }
 });
 
-const Order = bookshelf.model('Order', {
-    tableName: 'orders',
-    idAttribute: 'order_id',
-    orderItems: function() {
-        return this.hasMany('OrderItem', 'order_id');
+const Order = bookshelf.model("Order", {
+    tableName: "orders",
+    idAttribute: "order_id", // Specify the primary key column explicitly
+    orderItems: function () {
+        return this.hasMany("OrderItem", "order_id");
     }
 });
 
 const OrderItem = bookshelf.model('OrderItem', {
     tableName: 'order_items',
-    idAttribute: 'id',
-    order: function() {
-        return this.belongsTo('Order', 'order_id');
+    idAttribute: "order_item_id",
+    order: function () {
+        return this.belongsTo('Order', 'order_id'); // Establishes a many-to-one relationship with orders
     },
 });
-
 module.exports = { Product, Category, Tag, User, CartItem, Order, OrderItem };

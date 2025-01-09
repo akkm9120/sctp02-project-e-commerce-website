@@ -59,3 +59,12 @@ VALUES
 --     subtotal DECIMAL(10, 2) NOT NULL,             -- Subtotal (price_per_unit * quantity)
 --     FOREIGN KEY (order_id) REFERENCES orders(order_id) -- Foreign key linking back to the Orders table
 -- );
+
+
+
+-- ALTER TABLE orders
+-- MODIFY order_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- MODIFY total_cost DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+-- MODIFY delivery_date DATE NOT NULL DEFAULT '1970-01-01',
+-- MODIFY delivery_time TIME NOT NULL DEFAULT '00:00:00',
+-- MODIFY delivery_address VARCHAR(255) NOT NULL DEFAULT 'No Address Provided';
