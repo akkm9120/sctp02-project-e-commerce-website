@@ -12,8 +12,8 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: ['https://3000-akkm9120-project02front-umtcl5bzv03.ws-us117.gitpod.io','https://project02-frontend.vercel.app'], // Array of allowed origins
-    credentials: true
+    origin: '*', // Allow all origins
+    credentials: true // Allow cookies and credentials to be sent
 }));
 
 app.use(express.json());
