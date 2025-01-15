@@ -16,66 +16,83 @@ const getOrderById = async function (orderId) {
 }
 
 const createOrder = async (orderData) => {
-    console.log("this is inside create order", orderData);
-
-    const order = new Order({
-        order_date: orderData.order_date,
-        total_cost: orderData.total_cost,
-        delivery_date: orderData.delivery_date,
-        delivery_time: orderData.delivery_time,
-        delivery_address: orderData.delivery_address
-    });
-
-    const savedOrder = await order.save();
-    console.log("The ORDER was saved:", savedOrder);
-
-    for (let item of orderData.orderItemsData) {
-        const orderItem = new OrderItem({
-            order_id: savedOrder.get("order_id"),
-            product_name: item.product_name,
-            quantity: item.quantity,
-            price_per_unit: item.price_per_unit,
-            subtotal: item.subtotal
-        });
-        await orderItem.save();
-    }
-
-    return savedOrder;
-}
-
-const updateOrder = async function (orderId, orderData) {
     try {
-        // Fetch the order by ID
-        const order = await getOrderById(orderId);
-        if (!order) {
-            return false; // Return false if the order does not exist
-        }
+        console.log("this is inside create order", orderData);
 
-        // Update the order details
-        const { orderItemsData, ...orderFields } = orderData; // Separate order items from order fields
-        order.set(orderFields); // Use spread operator to update the order fields
-        await order.save();
+        const order = new Order({
+            order_date: orderData.order_date,
+            total_cost: orderData.total_cost,
+            delivery_date: orderData.delivery_date,
+            delivery_time: orderData.delivery_time,
+            delivery_address: orderData.delivery_address
+        });
 
-        // Delete all existing order items for the order
-        await OrderItem.where({ order_id: orderId }).destroy({ require: false });
+        // Saving the order and checking for errors
+        const savedOrder = await order.save();
+        console.log("The ORDER was saved:", savedOrder);
 
-        // Insert the new order items
-        for (let item of orderItemsData) {
-            const newOrderItem = new OrderItem({
-                order_id: orderId,
-                ...item // Spread the item data directly
+        // Saving order items and checking for errors
+        for (let item of orderData.orderItemsData) {
+            const orderItem = new OrderItem({
+                order_id: savedOrder.get("order_id"),
+                product_name: item.product_name,
+                quantity: item.quantity,
+                price_per_unit: item.price_per_unit,
+                subtotal: item.subtotal
             });
-            await newOrderItem.save();
+            await orderItem.save();
         }
 
-        return true;
+        return savedOrder;
+
     } catch (error) {
-        console.error("Error in updateOrder:", error);
-        throw error;
+        console.error("Error creating the order:", error);
+        throw new Error("Failed to create the order. Please try again later.");
     }
 };
-
-
+const updateOrder = async function (orderId, orderData) {
+    try {
+      const order = await getOrderById(orderId);
+      if (!order) {
+        return false;
+      }
+  
+      // Format the dates correctly for MySQL
+      const formattedOrderDate = new Date(orderData.order_date).toISOString().slice(0, 19).replace('T', ' ');
+      const formattedDeliveryDate = new Date(orderData.delivery_date).toISOString().slice(0, 10);
+  
+      // Update the order details with formatted dates
+      await order.set({
+        order_date: formattedOrderDate,
+        total_cost: orderData.total_cost,
+        delivery_date: formattedDeliveryDate,
+        delivery_time: orderData.delivery_time,
+        delivery_address: orderData.delivery_address,
+      }).save();
+  
+      // Delete all existing order items
+    //   await OrderItem.where({ order_id: orderId }).destroy({ require: false });
+  
+    //   // Insert the new order items using orderItems instead of orderItemsData
+    //   for (let item of orderData.orderItems) {
+    //     const newOrderItem = new OrderItem({
+    //       order_id: orderId,
+    //       product_name: item.product_name,
+    //       quantity: item.quantity,
+    //       price_per_unit: item.price_per_unit,
+    //       subtotal: item.subtotal
+    //     });
+    //     await newOrderItem.save();
+    //   }
+  
+      return true;
+    } catch (error) {
+      console.error("Error in updateOrder:", error);
+      throw error;
+    }
+  };
+  
+  
 
 
 const deleteOrder = async function (orderId) {
