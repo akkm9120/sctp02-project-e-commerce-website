@@ -10,10 +10,12 @@ const cors = require('cors');
 
 const app = express();
 
+
+const arrayOrigin = ['https://3000-akkm9120-project02front-7xbpwjll6s6.ws-us117.gitpod.io','https://3001-akkm9120-project02front-oebsnd1mauu.ws-us117.gitpod.io','https://3000-akkm9120-project02front-umtcl5bzv03.ws-us117.gitpod.io','https://akkm9120-project02front-umtcl5bzv03.ws-us117.gitpod.io/','https://project02-frontend.vercel.app','https://project02-frontend-j9ua0wl8d-akkm9120s-projects.vercel.app'] // Array of allowed origins
 // Enable CORS for all routes
 app.use(cors({
-    origin: '*', // Allow all origins
-    credentials: true // Allow cookies and credentials to be sent
+    origin: arrayOrigin,
+    credentials: true
 }));
 
 app.use(express.json());
