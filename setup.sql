@@ -1,12 +1,12 @@
-CREATE USER 'noname'@'%' IDENTIFIED WITH mysql_native_password BY 'noname1123';
+-- CREATE USER 'noname'@'%' IDENTIFIED BY 'noname1123';
 
-grant all privileges on *.* to 'noname'@'%';
+-- grant all privileges on *.* to 'noname'@'%';
 
 FLUSH PRIVILEGES;
 
-CREATE DATABASE organic;
+CREATE DATABASE ecommerce_local;
 
-use organic;
+use ecommerce_local;
 
 INSERT into categories (id,name)
 VALUES 
