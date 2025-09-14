@@ -5,11 +5,11 @@ const knex = require('knex')(
         client: process.env.DB_DRIVER || process.env.NODE_ENV === 'production' ? 'mysql2' : 'mysql2',
         connection: process.env.NODE_ENV === 'production' && process.env.MYSQL_URL ? 
             process.env.MYSQL_URL : {
-            user: process.env.NODE_ENV === 'production' ? process.env.PROD_DB_USER : process.env.DB_USER,
-            password: process.env.NODE_ENV === 'production' ? process.env.PROD_DB_PASSWORD : process.env.DB_PASSWORD,
-            database: process.env.NODE_ENV === 'production' ? process.env.PROD_DB_DATABASE : process.env.DB_DATABASE,
-            host: process.env.NODE_ENV === 'production' ? process.env.PROD_DB_HOST : process.env.DB_HOST,
-            port: process.env.NODE_ENV === 'production' ? process.env.PROD_DB_PORT : process.env.DB_PORT,
+            user: process.env.NODE_ENV === 'production' ? process.env.MYSQLUSER : process.env.DB_USER,
+            password: process.env.NODE_ENV === 'production' ? process.env.MYSQLPASSWORD : process.env.DB_PASSWORD,
+            database: process.env.NODE_ENV === 'production' ? process.env.MYSQLDATABASE : process.env.DB_DATABASE,
+            host: process.env.NODE_ENV === 'production' ? process.env.MYSQLHOST : process.env.DB_HOST,
+            port: process.env.NODE_ENV === 'production' ? process.env.MYSQLPORT : process.env.DB_PORT,
             ssl: process.env.NODE_ENV === 'production' ? {rejectUnauthorized: false} : false,
             connectTimeout: 60000,
             acquireConnectionTimeout: 60000,
