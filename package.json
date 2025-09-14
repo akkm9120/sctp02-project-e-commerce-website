@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "node node_modules/db-migrate/bin/db-migrate",
-    "start": "nodemon --ignore sessions"
+    "start": "nodemon --ignore sessions",
+    "deploy": "npm run migrate up && npm run start"
   },
   "author": "",
   "license": "ISC",
@@ -26,9 +27,11 @@
     "hbs": "^4.2.0",
     "knex": "^0.21.21",
     "mysql": "^2.18.1",
+    "mysql2": "^3.14.5",
     "nodemon": "^3.1.7",
     "session-file-store": "^1.5.0",
     "stripe": "^15.12.0",
     "wax-on": "^1.2.2"
-  }
+  },
+  "repository": "https://github.com/akkm9120/sctp02-project-e-commerce-website.git"
 }

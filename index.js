@@ -105,6 +105,7 @@ async function main() {
 
 main();
 
-app.listen(3000, () => {
-    console.log("Server has started on port 3000");
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server has started on port ${PORT}`);
 });
