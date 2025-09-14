@@ -36,7 +36,7 @@ exports.up = function (db) {
       notNull: true,
     },
     delivery_time: {
-      type: type.TIME,
+      type: "time",
       notNull: true,
     },
     delivery_address: {
