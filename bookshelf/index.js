@@ -3,7 +3,8 @@ const knex = require('knex')(
     {
         // client refers to what database technology we are using
         client: process.env.DB_DRIVER || process.env.NODE_ENV === 'production' ? 'mysql2' : 'mysql2',
-        connection: {
+        connection: process.env.NODE_ENV === 'production' && process.env.MYSQL_URL ? 
+            process.env.MYSQL_URL : {
             user: process.env.NODE_ENV === 'production' ? process.env.MYSQLUSER : process.env.DB_USER,
             password: process.env.NODE_ENV === 'production' ? process.env.MYSQLPASSWORD : process.env.DB_PASSWORD,
             database: process.env.NODE_ENV === 'production' ? process.env.MYSQLDATABASE : process.env.DB_DATABASE,
