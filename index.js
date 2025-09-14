@@ -89,21 +89,33 @@ app.get('/health', (req, res) => {
 // Database connection test endpoint
 app.get('/db-test', async (req, res) => {
     try {
-        const bookshelf = require('./bookshelf');
-        await bookshelf.knex.raw('SELECT 1');
-        res.json({ 
-            status: 'OK', 
+        const result = await bookshelf.knex.raw('SELECT 1');
+        res.json({
+            status: 'SUCCESS',
             message: 'Database connection successful',
+            result: result,
             timestamp: new Date().toISOString()
         });
     } catch (error) {
-        res.status(500).json({ 
-            status: 'ERROR', 
+        res.status(500).json({
+            status: 'ERROR',
             message: 'Database connection failed',
             error: error.message,
             timestamp: new Date().toISOString()
         });
     }
+});
+
+app.get('/env-debug', (req, res) => {
+    res.json({
+        NODE_ENV: process.env.NODE_ENV,
+        MYSQLUSER: process.env.MYSQLUSER ? 'SET' : 'NOT_SET',
+        MYSQLPASSWORD: process.env.MYSQLPASSWORD ? 'SET' : 'NOT_SET',
+        MYSQLDATABASE: process.env.MYSQLDATABASE ? 'SET' : 'NOT_SET',
+        MYSQLHOST: process.env.MYSQLHOST ? 'SET' : 'NOT_SET',
+        MYSQLPORT: process.env.MYSQLPORT ? 'SET' : 'NOT_SET',
+        timestamp: new Date().toISOString()
+    });
 });
 
 // Root route
