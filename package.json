@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "node node_modules/db-migrate/bin/db-migrate",
     "dev": "nodemon --ignore sessions",
-    "start": "NODE_ENV=production npm run migrate up && NODE_ENV=production node index.js",
+    "start": "NODE_ENV=production node index.js",
     "deploy": "npm run migrate up && npm run start"
   },
   "author": "",

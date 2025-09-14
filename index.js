@@ -77,29 +77,16 @@ app.use(function (err, req, res, next) {
 });
 
 // Routes
-async function main() {
-    const landingRoutes = require('./routes/landing');
-    const productRoutes = require('./routes/products');
-    const userRoutes = require('./routes/users');
-    const cloudinaryRoutes = require('./routes/cloudinary');
-    const shoppingCartRoutes = require('./routes/shoppingCart');
-    const checkoutRoutes = require('./routes/checkout');
-
-    const api = {
-        products: require('./routes/api/products'),
-        orders: require('./routes/api/order')
-    };
-
-    // Health check endpoint
-    app.get('/health', (req, res) => {
-        res.json({ 
-            status: 'OK', 
-            timestamp: new Date().toISOString(),
-            env: process.env.NODE_ENV || 'development'
-        });
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        env: process.env.NODE_ENV || 'development'
     });
+});
 
-    // Root route
+// Root route
 app.get('/', (req, res) => {
     res.json({ 
         message: 'E-commerce API is running',
@@ -108,17 +95,36 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/', landingRoutes);
-    app.use('/products', productRoutes);
-    app.use('/users', userRoutes);
-    app.use('/cloudinary', cloudinaryRoutes);
-    app.use('/cart', shoppingCartRoutes);
-    app.use('/checkout', checkoutRoutes);
+async function main() {
+    try {
+        const landingRoutes = require('./routes/landing');
+        const productRoutes = require('./routes/products');
+        const userRoutes = require('./routes/users');
+        const cloudinaryRoutes = require('./routes/cloudinary');
+        const shoppingCartRoutes = require('./routes/shoppingCart');
+        const checkoutRoutes = require('./routes/checkout');
 
-    // RESTful API endpoints
-    app.use('/api/products', express.json(), api.products);
-    app.use('/api/orders', express.json(), api.orders);
+        const api = {
+            products: require('./routes/api/products'),
+            orders: require('./routes/api/order')
+        };
 
+        app.use('/', landingRoutes);
+        app.use('/products', productRoutes);
+        app.use('/users', userRoutes);
+        app.use('/cloudinary', cloudinaryRoutes);
+        app.use('/cart', shoppingCartRoutes);
+        app.use('/checkout', checkoutRoutes);
+
+        // RESTful API endpoints
+        app.use('/api/products', express.json(), api.products);
+        app.use('/api/orders', express.json(), api.orders);
+        
+        console.log('All routes loaded successfully');
+    } catch (error) {
+        console.error('Error loading routes:', error.message);
+        console.log('Server will continue with basic endpoints only');
+    }
 }
 
 main();
