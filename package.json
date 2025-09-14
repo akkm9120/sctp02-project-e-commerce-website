@@ -9,7 +9,9 @@
     "migrate:prod": "NODE_ENV=production node node_modules/db-migrate/bin/db-migrate up",
     "dev": "nodemon --ignore sessions",
     "start": "NODE_ENV=production node index.js",
-    "deploy": "npm run migrate:prod && npm run start"
+    "deploy": "npm run migrate:prod && npm run start",
+    "build": "npm run migrate:prod",
+    "postinstall": "npm run migrate:prod"
   },
   "author": "",
   "license": "ISC",
