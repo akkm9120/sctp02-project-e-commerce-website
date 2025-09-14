@@ -8,7 +8,7 @@
     "migrate": "node node_modules/db-migrate/bin/db-migrate",
     "migrate:prod": "NODE_ENV=production node node_modules/db-migrate/bin/db-migrate up",
     "dev": "nodemon --ignore sessions",
-    "start": "NODE_ENV=production node index.js",
+    "start": "NODE_ENV=production node node_modules/db-migrate/bin/db-migrate up && NODE_ENV=production node index.js",
     "deploy": "npm run migrate:prod && npm run start",
     "build": "echo 'Build completed'"
   },
