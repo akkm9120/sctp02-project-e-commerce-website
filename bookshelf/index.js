@@ -12,7 +12,8 @@ const knex = require('knex')(
             ssl: process.env.NODE_ENV === 'production' ? {rejectUnauthorized: false} : false,
             connectTimeout: 60000,
             acquireConnectionTimeout: 60000,
-            timeout: 60000
+            timeout: 60000,
+            insecureAuth: true
         },
         pool: {
             min: 2,
