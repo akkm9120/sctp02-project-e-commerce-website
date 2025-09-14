@@ -2,7 +2,7 @@
 const knex = require('knex')(
     {
         // client refers to what database technology we are using
-        client: process.env.DB_DRIVER || process.env.NODE_ENV === 'production' ? 'mysql' : 'mysql',
+        client: process.env.DB_DRIVER || process.env.NODE_ENV === 'production' ? 'mysql2' : 'mysql2',
         connection: {
             user: process.env.NODE_ENV === 'production' ? process.env.MYSQLUSER : process.env.DB_USER,
             password: process.env.NODE_ENV === 'production' ? process.env.MYSQLPASSWORD : process.env.DB_PASSWORD,
@@ -12,8 +12,7 @@ const knex = require('knex')(
             ssl: process.env.NODE_ENV === 'production' ? {rejectUnauthorized: false} : false,
             connectTimeout: 60000,
             acquireConnectionTimeout: 60000,
-            timeout: 60000,
-            insecureAuth: true
+            timeout: 60000
         },
         pool: {
             min: 2,
