@@ -10,7 +10,7 @@
     "dev": "nodemon --ignore sessions",
     "start": "NODE_ENV=production node index.js",
     "deploy": "npm run migrate:prod && npm run start",
-    "build": "npm run migrate:prod"
+    "build": "echo 'Build completed'"
   },
   "author": "",
   "license": "ISC",
