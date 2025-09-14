@@ -86,6 +86,26 @@ app.get('/health', (req, res) => {
     });
 });
 
+// Database connection test endpoint
+app.get('/db-test', async (req, res) => {
+    try {
+        const bookshelf = require('./bookshelf');
+        await bookshelf.knex.raw('SELECT 1');
+        res.json({ 
+            status: 'OK', 
+            message: 'Database connection successful',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            status: 'ERROR', 
+            message: 'Database connection failed',
+            error: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
+});
+
 // Root route
 app.get('/', (req, res) => {
     res.json({ 
