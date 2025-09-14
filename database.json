@@ -21,5 +21,26 @@
     "ssl": {
       "rejectUnauthorized": false
     }
+  },
+  "production": {
+    "driver": "mysql",
+    "user": {
+      "ENV": "MYSQLUSER"
+    },
+    "password": {
+      "ENV": "MYSQLPASSWORD"
+    },
+    "database": {
+      "ENV": "MYSQLDATABASE"
+    },
+    "host": {
+      "ENV": "MYSQLHOST"
+    },
+    "port": {
+      "ENV": "MYSQLPORT"
+    },
+    "ssl": {
+      "rejectUnauthorized": false
+    }
   }
 }
