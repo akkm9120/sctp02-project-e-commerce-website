@@ -23,7 +23,7 @@
     }
   },
   "production": {
-    "driver": "mysql",
+    "driver": "mysql2",
     "user": {
       "ENV": "MYSQLUSER"
     },

@@ -6,9 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "node node_modules/db-migrate/bin/db-migrate",
+    "migrate:prod": "NODE_ENV=production node node_modules/db-migrate/bin/db-migrate up",
     "dev": "nodemon --ignore sessions",
     "start": "NODE_ENV=production node index.js",
-    "deploy": "npm run migrate up && npm run start"
+    "deploy": "npm run migrate:prod && npm run start"
   },
   "author": "",
   "license": "ISC",
